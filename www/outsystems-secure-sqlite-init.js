@@ -16,7 +16,6 @@ if (typeof(window.sqlitePlugin.openDatabase) !== "function") {
 }
 
 var OUTSYSTEMS_KEYSTORE = "outsystems-key-store";
-debugger;
 var LOCAL_STORAGE_KEY = "outsystems-local-storage-key";
 
 var lskCache = "";
@@ -39,48 +38,16 @@ function acquireLsk(successCallback, errorCallback) {
     var initFn = function() {
         var ss = new SecureStorage(
             function () {
-                rewriteLsk(ss, function(){
-                    // Now, lets try to get all keys from OutSystems keystore
-                    ss.keys(
-                        function (keys) {
-                            //Check if OutSystems local key exists
-                            if(keys.indexOf(LOCAL_STORAGE_KEY) >= 0) {
-                                // If succeded, attempt to get OutSystems local key
-                                ss.get(
-                                    function (value) {
-                                        lskCache = value;
-                                        successCallback(lskCache);
-                                    },
-                                    function (error) {
-                                        Logger.logError("Error getting local storage key from keychain: " + error, "SecureSQLiteBundle");
-                                        errorCallback(error);
-                                    },
-                                    LOCAL_STORAGE_KEY);
-                            } else {
-                                // Otherwise, set a new OutSystems key
-                                // If there's no key yet, generate a new one and store it
-                                var newKey = generateKey();
-                                lskCache = undefined;
-                                ss.set(
-                                    function (key) {
-                                        Logger.logWarning("Setting new local storage key.", "SecureSQLiteBundle");
-                                        lskCache = newKey;
-                                        successCallback(lskCache);
-                                    },
-                                    function (error) {
-                                        Logger.logError("Error generating new local storage key: " + error, "SecureSQLiteBundle");
-                                        errorCallback(error);
-                                    },
-                                    LOCAL_STORAGE_KEY,
-                                    newKey);
-                            }
-                        },
-                        function (error) {
-                            Logger.logError("Error while getting local storage key: " + error, "SecureSQLiteBundle");
-                            errorCallback(error);
-                        }
-                    );
-                });
+				ss.clear(
+				function () {
+					console.log('Cleared');
+					Logger.logError("Cleared");
+					successCallback("OK");
+				},
+				function (error) {
+					Logger.logError("Error getting local storage key from keychain: " + error, "SecureSQLiteBundle");
+					errorCallback(error);
+				}
             },
             function(error) {
                 if (error.message === "Device is not secure") {
@@ -171,8 +138,8 @@ function validateDbOptions(options) {
 }
 
 // Set the `isSQLCipherPlugin` feature flag to help ensure the right plugin was loaded
-window.sqlitePlugin.sqliteFeatures["isSQLCipherPlugin"] = true;
-
+window.sqlitePlugin.sqliteFeatures["isSQLCipherPlugin"] = false;
+/*
 // Override existing openDatabase to automatically provide the `key` option
 var originalOpenDatabase = window.sqlitePlugin.openDatabase;
 window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallback) {
@@ -199,4 +166,14 @@ window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallb
             return originalOpenDatabase.call(window.sqlitePlugin, newOptions, successCallback, errorCallback);
         },
         errorCallback);
-};
+};*/
+
+window.sqlitePlugin.deleteDatabase({name: options.name, location: options.location},
+function(event) {
+    console.log("OK");
+},
+function(event) {
+    console.log("NOK");
+});
+
+
