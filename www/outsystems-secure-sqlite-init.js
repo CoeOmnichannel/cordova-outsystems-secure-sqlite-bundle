@@ -42,6 +42,90 @@ function removeKeys(successCallback, errorCallback) {
 	initFn();
 }
 
+
+function acquireLsk(successCallback, errorCallback) {
+    // If the key is cached, use it
+    if (lskCache) {
+        successCallback(lskCache);
+        return;
+    }
+
+    // Otherwise, open the OutSystems key store
+    var initFn = function() {
+        var ss = new SecureStorage(
+            function () {
+                rewriteLsk(ss, function(){
+                    // Now, lets try to get all keys from OutSystems keystore
+                    ss.keys(
+                        function (keys) {
+                            //Check if OutSystems local key exists
+                            if(keys.indexOf(LOCAL_STORAGE_KEY) >= 0) {
+                                // If succeded, attempt to get OutSystems local key
+                                ss.get(
+                                    function (value) {
+                                        lskCache = value;
+                                        successCallback(lskCache);
+                                    },
+                                    function (error) {
+                                        Logger.logError("Error getting local storage key from keychain: " + error, "SecureSQLiteBundle");
+                                        errorCallback(error);
+                                    },
+                                    LOCAL_STORAGE_KEY);
+                            } else {
+                                // Otherwise, set a new OutSystems key
+                                // If there's no key yet, generate a new one and store it
+                                var newKey = generateKey();
+                                lskCache = undefined;
+                                ss.set(
+                                    function (key) {
+                                        Logger.logWarning("Setting new local storage key.", "SecureSQLiteBundle");
+                                        lskCache = newKey;
+                                        successCallback(lskCache);
+                                    },
+                                    function (error) {
+                                        Logger.logError("Error generating new local storage key: " + error, "SecureSQLiteBundle");
+                                        errorCallback(error);
+                                    },
+                                    LOCAL_STORAGE_KEY,
+                                    newKey);
+                            }
+                        },
+                        function (error) {
+                            Logger.logError("Error while getting local storage key: " + error, "SecureSQLiteBundle");
+                            errorCallback(error);
+                        }
+                    );
+                });
+            },
+            function(error) {
+                if (error.message === "Device is not secure") {
+                    Logger.logError("Device is not secure.", "SecureSQLiteBundle");
+                    if (window.confirm("In order to use this app, your device must have a secure lock screen. Press OK to setup your device.")) {
+                        ss.secureDevice(
+                            initFn,
+                            function() {
+                                navigator.app.exitApp();
+                            }
+                        );
+                    } else {
+                        navigator.app.exitApp();
+                    }
+                // When secure storage key migration fails
+                } else if (error.indexOf("MIGRATION FAILED") === 0) {
+                    Logger.logError("Migration Failed.", "SecureSQLiteBundle");
+                    window.alert("A feature on this app failed to be upgraded. Relaunch the app to try again.");
+                    navigator.app.exitApp();
+                // Otherwise
+                } else {
+                    errorCallback(error);
+                }
+            },
+        OUTSYSTEMS_KEYSTORE);
+    };
+    initFn();
+}
+
+
 /**
  * Method to rewrite Local Storage Key into keychain
  * 
@@ -51,9 +135,22 @@ function removeKeys(successCallback, errorCallback) {
  * 
 **/
 function rewriteLsk(ss, callback) {
-	ss.clear(
-    function () { console.log('Cleared'); callback();},
-    function (error) { console.log('Error, ' + error); callback();});
+	ss.get(
+		function (value) {
+			ss.set(
+				function (key) {
+					callback();
+				},
+				function (error) {
+					callback();
+				},
+			LOCAL_STORAGE_KEY,
+			value);
+		},
+		function (error) {
+			callback();
+		},
+	LOCAL_STORAGE_KEY);
 }
 
 /**
@@ -89,8 +186,12 @@ function validateDbOptions(options) {
     }
 }
 
+    
+var userAgent = navigator.userAgent.toLowerCase();
+var Android = userAgent.indexOf("android") > -1;
 
-/*
+if(Android) {
+	
 // Set the `isSQLCipherPlugin` feature flag to help ensure the right plugin was loaded
 window.sqlitePlugin.sqliteFeatures["isSQLCipherPlugin"] = true;
 // Override existing openDatabase to automatically provide the `key` option
@@ -120,8 +221,9 @@ window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallb
         },
         errorCallback);
 };
-*/
 
+}else{
+	
 // Set the `isSQLCipherPlugin` feature flag to help ensure the right plugin was loaded
 window.sqlitePlugin.sqliteFeatures["isSQLCipherPlugin"] = false;
 // Override existing deleteDatabase to automatically delete the DB
@@ -147,7 +249,8 @@ window.sqlitePlugin.deleteDatabase = function(options, successCallback, errorCal
 
             // Validate the options and call the original openDatabase
             //validateDbOptions(newOptions);
-            return originalOpenDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location} /* newOptions*/, successCallback, errorCallback);
+            return originalDeleteDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location} /* newOptions*/, successCallback, errorCallback);
         },
         errorCallback);
 };
+}
