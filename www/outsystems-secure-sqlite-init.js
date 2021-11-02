@@ -191,6 +191,15 @@ var userAgent = navigator.userAgent.toLowerCase();
 var Android = userAgent.indexOf("android") > -1;
 
 if(Android) {
+	
+	
+// Set the `isSQLCipherPlugin` feature flag to help ensure the right plugin was loaded
+window.sqlitePlugin.sqliteFeatures["isSQLCipherPlugin"] = false;
+// Override existing deleteDatabase to automatically delete the DB
+var originalDeleteDatabase = window.sqlitePlugin.deleteDatabase;
+window.sqlitePlugin.deleteDatabase = function(options, successCallback, errorCallback) {
+    originalDeleteDatabase.call(window.sqlitePlugin,{name: options.name, location: options.location} /* newOptions*/, successCallback, errorCallback);
+};
 /*	
 // Set the `isSQLCipherPlugin` feature flag to help ensure the right plugin was loaded
 window.sqlitePlugin.sqliteFeatures["isSQLCipherPlugin"] = true;
