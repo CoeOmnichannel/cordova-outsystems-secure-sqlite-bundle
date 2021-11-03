@@ -178,7 +178,7 @@ function validateDbOptions(options) {
 
 
 // Set the `isSQLCipherPlugin` feature flag to help ensure the right plugin was loaded
-window.sqlitePlugin.sqliteFeatures["isSQLCipherPlugin"] = true;
+window.sqlitePlugin.sqliteFeatures["isSQLCipherPlugin"] = false;
 // Override existing openDatabase to automatically provide the `key` option
 var originalOpenDatabase = window.sqlitePlugin.openDatabase;
 window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallback) {
@@ -198,10 +198,10 @@ window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallb
             }
             
             // Set the `key` to the one provided
-            newOptions.key = key;
+            //newOptions.key = key;
 
             // Validate the options and call the original openDatabase
-            validateDbOptions(newOptions);
+            //validateDbOptions(newOptions);
             return originalOpenDatabase.call(window.sqlitePlugin, newOptions, successCallback, errorCallback);
         },
         errorCallback);
@@ -395,41 +395,6 @@ function validateDbOptions(options) {
         throw new Error("Attempting to open a database without a valid encryption key.");
     }
 }
-
-    
-
-	
-/*	
-// Set the `isSQLCipherPlugin` feature flag to help ensure the right plugin was loaded
-window.sqlitePlugin.sqliteFeatures["isSQLCipherPlugin"] = true;
-// Override existing openDatabase to automatically provide the `key` option
-var originalOpenDatabase = window.sqlitePlugin.openDatabase;
-window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallback) {
-    return acquireLsk(
-        function (key) {
-            // Clone the options
-            var newOptions = {};
-            for (var prop in options) {
-                if (options.hasOwnProperty(prop)) {
-                    newOptions[prop] = options[prop];
-                }
-            }
-            
-            // Ensure `location` is set (it is mandatory now)
-            if (newOptions.location === undefined) {
-                newOptions.location = "default";
-            }
-            
-            // Set the `key` to the one provided
-            newOptions.key = key;
-
-            // Validate the options and call the original openDatabase
-            validateDbOptions(newOptions);
-            return originalOpenDatabase.call(window.sqlitePlugin, newOptions, successCallback, errorCallback);
-        },
-        errorCallback);
-};
-*/
 	
 // Set the `isSQLCipherPlugin` feature flag to help ensure the right plugin was loaded
 window.sqlitePlugin.sqliteFeatures["isSQLCipherPlugin"] = false;
