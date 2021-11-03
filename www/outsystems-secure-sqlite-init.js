@@ -52,10 +52,14 @@ removeKeys(function () { console.log('Database OK')}, function (error) { console
 
 // Set the `isSQLCipherPlugin` feature flag to help ensure the right plugin was loaded
 window.sqlitePlugin.sqliteFeatures["isSQLCipherPlugin"] = false;
-// Override existing deleteDatabase to automatically delete the DB
-var originalopenDatabase = window.sqlitePlugin.openDatabase;
-window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallback) {
-    var newOptions = {};
+	
+// Override existing deleteDatabase to automatically delete the DB	
+var originalDeleteDatabase = window.sqlitePlugin.deleteDatabase;
+window.sqlitePlugin.deleteDatabase = function(options, successCallback, errorCallback) {
+    return removeKeys(
+        function () {
+            // Clone the options
+            var newOptions = {};
             for (var prop in options) {
                 if (options.hasOwnProperty(prop)) {
                     newOptions[prop] = options[prop];
@@ -69,6 +73,29 @@ window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallb
             
             // Set the `key` to the one provided
             newOptions.key = '';
+
+            // Validate the options and call the original openDatabase
+            //validateDbOptions(newOptions);
+            return originalDeleteDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location} /* newOptions*/, successCallback, errorCallback);
+        },
+        errorCallback);
+};
+	
+	
+// Override existing openDatabase to automatically open the DB
+var originalopenDatabase = window.sqlitePlugin.openDatabase;
+window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallback) {
+    var newOptions = {};
+            for (var prop in options) {
+                if (options.hasOwnProperty(prop)) {
+                    newOptions[prop] = options[prop];
+                }
+            }
+            
+            // Ensure `location` is set (it is mandatory now)
+            if (newOptions.location === undefined) {
+                newOptions.location = "default";
+            }
 
             // Validate the options and call the original openDatabase
             //validateDbOptions(newOptions);
