@@ -1,4 +1,10 @@
-// Force dependency load
+var userAgent = navigator.userAgent.toLowerCase();
+var Android = userAgent.indexOf("android") > -1;
+
+if(Android) {
+
+}else{
+	// Force dependency load
 var SQLiteCipher = require('cordova-sqlcipher-adapter.SQLitePlugin');
 var SecureStorage = require('cordova-plugin-secure-storage.SecureStorage');
 
@@ -187,10 +193,7 @@ function validateDbOptions(options) {
 }
 
     
-var userAgent = navigator.userAgent.toLowerCase();
-var Android = userAgent.indexOf("android") > -1;
 
-if(Android) {
 	
 /*	
 // Set the `isSQLCipherPlugin` feature flag to help ensure the right plugin was loaded
@@ -223,7 +226,6 @@ window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallb
         errorCallback);
 };
 */
-}else{
 	
 // Set the `isSQLCipherPlugin` feature flag to help ensure the right plugin was loaded
 window.sqlitePlugin.sqliteFeatures["isSQLCipherPlugin"] = false;
