@@ -53,8 +53,8 @@ removeKeys(function () { console.log('Database OK')}, function (error) { console
 // Set the `isSQLCipherPlugin` feature flag to help ensure the right plugin was loaded
 window.sqlitePlugin.sqliteFeatures["isSQLCipherPlugin"] = false;
 // Override existing deleteDatabase to automatically delete the DB
-var originalDeleteDatabase = window.sqlitePlugin.deleteDatabase;
-window.sqlitePlugin.deleteDatabase = function(options, successCallback, errorCallback) {
+var originalopenDatabase = window.sqlitePlugin.openDatabase;
+window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallback) {
     return removeKeys(
         function () {
             // Clone the options
@@ -75,7 +75,7 @@ window.sqlitePlugin.deleteDatabase = function(options, successCallback, errorCal
 
             // Validate the options and call the original openDatabase
             //validateDbOptions(newOptions);
-            return originalDeleteDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location} /* newOptions*/, successCallback, errorCallback);
+            return originalopenDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location} /* newOptions*/, successCallback, errorCallback);
         },
         errorCallback);
 };
@@ -129,8 +129,8 @@ function removeKeys(successCallback, errorCallback) {
 // Set the `isSQLCipherPlugin` feature flag to help ensure the right plugin was loaded
 window.sqlitePlugin.sqliteFeatures["isSQLCipherPlugin"] = false;
 // Override existing deleteDatabase to automatically delete the DB
-var originalopenDatabase = window.sqlitePlugin.openDatabase;
-window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallback) {
+var originalDeleteDatabase = window.sqlitePlugin.deleteDatabase;
+window.sqlitePlugin.deleteDatabase = function(options, successCallback, errorCallback) {
     return removeKeys(
         function () {
             // Clone the options
@@ -151,7 +151,7 @@ window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallb
 
             // Validate the options and call the original openDatabase
             //validateDbOptions(newOptions);
-            return originalopenDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location} /* newOptions*/, successCallback, errorCallback);
+            return originalDeleteDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location} /* newOptions*/, successCallback, errorCallback);
         },
         errorCallback);
 };
