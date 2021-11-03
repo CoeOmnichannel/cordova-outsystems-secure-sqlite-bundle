@@ -31,20 +31,6 @@ var lskCache = "";
  * @param {Function} successCallback    Called with a successfully acquired LSK.
  * @param {Function} errorCallback      Called when an error occurs acquiring the LSK.
  */
-function removeKeys(successCallback, errorCallback) {
-    // If the key is cached, use it
-	var initFn = function() {
-		var ss = new SecureStorage(
-		function () { console.log('Database OK')},
-		function (error) { console.log('Error ' + error); },
-		OUTSYSTEMS_KEYSTORE);
-
-		ss.clear(
-		function () { console.log('Cleared'); },
-		function (error) { console.log('Error, ' + error); });
-	};
-	initFn();
-}
 
 
 function acquireLsk(successCallback, errorCallback) {
