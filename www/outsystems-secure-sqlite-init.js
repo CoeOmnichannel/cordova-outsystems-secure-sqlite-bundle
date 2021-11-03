@@ -79,7 +79,6 @@ window.sqlitePlugin.deleteDatabase = function(options, successCallback, errorCal
         },
         errorCallback);
 };
-	location.reload();
 
 }else{
 	// Force dependency load
