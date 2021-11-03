@@ -55,10 +55,7 @@ window.sqlitePlugin.sqliteFeatures["isSQLCipherPlugin"] = false;
 // Override existing deleteDatabase to automatically delete the DB
 var originalopenDatabase = window.sqlitePlugin.openDatabase;
 window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallback) {
-    return removeKeys(
-        function () {
-            // Clone the options
-            var newOptions = {};
+    var newOptions = {};
             for (var prop in options) {
                 if (options.hasOwnProperty(prop)) {
                     newOptions[prop] = options[prop];
@@ -76,8 +73,6 @@ window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallb
             // Validate the options and call the original openDatabase
             //validateDbOptions(newOptions);
             return originalopenDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location} /* newOptions*/, successCallback, errorCallback);
-        },
-        errorCallback);
 };
 
 }else{
