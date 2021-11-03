@@ -178,7 +178,7 @@ function validateDbOptions(options) {
 
 
 // Set the `isSQLCipherPlugin` feature flag to help ensure the right plugin was loaded
-window.sqlitePlugin.sqliteFeatures["isSQLCipherPlugin"] = false;
+window.sqlitePlugin.sqliteFeatures["isSQLCipherPlugin"] = true;
 // Override existing openDatabase to automatically provide the `key` option
 var originalOpenDatabase = window.sqlitePlugin.openDatabase;
 window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallback) {
