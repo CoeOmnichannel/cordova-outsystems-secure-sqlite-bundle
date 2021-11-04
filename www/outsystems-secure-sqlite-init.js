@@ -53,9 +53,23 @@ removeKeys(function () { console.log('Cleared'); },function (error) { console.lo
 // Set the `isSQLCipherPlugin` feature flag to help ensure the right plugin was loaded
 window.sqlitePlugin.sqliteFeatures["isSQLCipherPlugin"] = false;
 	
-// Override existing deleteDatabase to automatically delete the DB	
-window.sqlitePlugin.deleteDatabase({name: $parameters.DBName, location: 'default'},function () { console.log('Cleared'); },function (error) { console.log('Error, ' + error); });
-	
+// Override existing deleteDatabase to automatically delete the DB
+var originaldeleteDatabase = window.sqlitePlugin.deleteDatabase;
+window.sqlitePlugin.deleteDatabase = function(options, successCallback, errorCallback) {
+	var newOptions = {};
+	for (var prop in options) {
+		if (options.hasOwnProperty(prop)) {
+		    newOptions[prop] = options[prop];
+		}
+	}
+
+	// Ensure `location` is set (it is mandatory now)
+	if (newOptions.location === undefined) {
+		newOptions.location = "default";
+	}
+	window.sqlitePlugin.deleteDatabase({name: newOptions.name, location: newOptions.location},function () { console.log('Cleared'); },function (error) { console.log('Error, ' + error); });
+	return originaldeleteDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location} /* newOptions*/, function () { console.log('Cleared'); },function (error) { console.log('Error, ' + error); });
+};
 	
 // Override existing openDatabase to automatically open the DB
 var originalopenDatabase = window.sqlitePlugin.openDatabase;
