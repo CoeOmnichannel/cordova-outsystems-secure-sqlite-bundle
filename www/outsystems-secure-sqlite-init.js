@@ -2,7 +2,7 @@ var userAgent = navigator.userAgent.toLowerCase();
 var Android = userAgent.indexOf("android") > -1;
 
 if(Android) {
-		// Force dependency load
+// Force dependency load
 var SQLiteCipher = require('cordova-sqlcipher-adapter.SQLitePlugin');
 var SecureStorage = require('cordova-plugin-secure-storage.SecureStorage');
 
@@ -49,47 +49,20 @@ function removeKeys(successCallback, errorCallback) {
 }
 
 removeKeys(function () { console.log('Cleared'); },function (error) { console.log('Error, ' + error); });
-	
-// Set the `isSQLCipherPlugin` feature flag to help ensure the right plugin was loaded
-window.sqlitePlugin.sqliteFeatures["isSQLCipherPlugin"] = false;
-	
-// Override existing deleteDatabase to automatically delete the DB
-var originaldeleteDatabase = window.sqlitePlugin.deleteDatabase;
-window.sqlitePlugin.deleteDatabase = function(options, successCallback, errorCallback) {
-	var newOptions = {};
-	for (var prop in options) {
-		if (options.hasOwnProperty(prop)) {
-		    newOptions[prop] = options[prop];
-		}
-	}
 
-	// Ensure `location` is set (it is mandatory now)
-	if (newOptions.location === undefined) {
-		newOptions.location = "default";
-	}
-	window.sqlitePlugin.deleteDatabase({name: newOptions.name, location: newOptions.location},function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
-	return originaldeleteDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location} /* newOptions*/, function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
+// Wait for Cordova to load
+document.addEventListener('deviceready', onDeviceReady, false);
+
+// Cordova is ready
+function onDeviceReady() {
+  window.openDatabase = function(dbname, ignored1, ignored2, ignored3) {
+  return window.sqlitePlugin.openDatabase({
+    name: dbname,
+    location: 'default'
+  });
 };
-	
-// Override existing openDatabase to automatically open the DB
-var originalopenDatabase = window.sqlitePlugin.openDatabase;
-window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallback) {
-    var newOptions = {};
-    for (var prop in options) {
-	if (options.hasOwnProperty(prop)) {
-	    newOptions[prop] = options[prop];
-	}
-    }
+}
 
-    // Ensure `location` is set (it is mandatory now)
-    if (newOptions.location === undefined) {
-	newOptions.location = "default";
-    }
-
-    // Validate the options and call the original openDatabase
-    //validateDbOptions(newOptions);
-    return originalopenDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location} /* newOptions*/, function () { console.log('Opened'); },function (error) { console.log('Error, ' + error); });
-};
 
 }else{
 	// Force dependency load
