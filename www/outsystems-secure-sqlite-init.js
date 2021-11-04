@@ -68,12 +68,12 @@ document.addEventListener('deviceready', onDeviceReady, false);
 // Cordova is ready
 function onDeviceReady() {
   window.openDatabase = function(options) {
-	  var newOptions = {};
-            for (var prop in options) {
-                if (options.hasOwnProperty(prop)) {
-                    newOptions[prop] = options[prop];
-                }
-            }
+	var newOptions = {};
+	for (var prop in options) {
+		if (options.hasOwnProperty(prop)) {
+		    newOptions[prop] = options[prop];
+		}
+	}
 	  
   return window.sqlitePlugin.openDatabase({
     name: newOptions.name,
