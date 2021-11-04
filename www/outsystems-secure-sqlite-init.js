@@ -57,7 +57,7 @@ removeKeys(function () { console.log('Cleared'); },function (error) { console.lo
 	
 // Set the `isSQLCipherPlugin` feature flag to help ensure the right plugin was loaded
 window.sqlitePlugin.sqliteFeatures["isSQLCipherPlugin"] = false;
-	
+/*	
 // Override existing deleteDatabase to automatically delete the DB
 var originaldeleteDatabase = window.sqlitePlugin.deleteDatabase;
 window.sqlitePlugin.deleteDatabase = function(options, successCallback, errorCallback) {
@@ -73,13 +73,13 @@ window.sqlitePlugin.deleteDatabase = function(options, successCallback, errorCal
 		newOptions.location = "default";
 	}
 	//deleteDB(newOptions);
-	return originaldeleteDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location} /* newOptions*/, 
+	return originaldeleteDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location}, 
 	function () {
     	// Try Delete DB
         window.sqlitePlugin.deleteDatabase({name: newOptions.name, location: newOptions.location},
 					   function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
 	},function (error) { console.log('Error, ' + error); });
-};
+};*/
 	
 // Override existing openDatabase to automatically open the DB
 var originalopenDatabase = window.sqlitePlugin.openDatabase;
@@ -98,7 +98,12 @@ window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallb
 
     // Validate the options and call the original openDatabase
     //validateDbOptions(newOptions);
-    return originalopenDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location} /* newOptions*/, function () { console.log('Opened'); },function (error) { console.log('Error, ' + error); });
+    return originalopenDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location},
+    function () {
+    	// Try Delete DB
+        window.sqlitePlugin.deleteDatabase({name: newOptions.name, location: newOptions.location},
+					   function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
+     },function (error) { console.log('Error, ' + error); });
 };
 
 }else{
