@@ -62,25 +62,20 @@ function deleteDB(dbName,location) {
 
 removeKeys(function () { console.log('Cleared'); },function (error) { console.log('Error, ' + error); });
 
-// Wait for Cordova to load
-document.addEventListener('deviceready', onDeviceReady, false);
 
-// Cordova is ready
-function onDeviceReady() {
-  window.openDatabase = function(options) {
-	var newOptions = {};
-	for (var prop in options) {
-		if (options.hasOwnProperty(prop)) {
-		    newOptions[prop] = options[prop];
-		}
+window.openDatabase = function(options) {
+var newOptions = {};
+for (var prop in options) {
+	if (options.hasOwnProperty(prop)) {
+	    newOptions[prop] = options[prop];
 	}
-	  
-  return window.sqlitePlugin.openDatabase({
-    name: newOptions.name,
-    location: newOptions.location
-  },deleteDB(newOptions.name,newOptions.location),deleteDB(newOptions.name,newOptions.location));
-  };
 }
+
+return window.sqlitePlugin.openDatabase({
+	name: newOptions.name,
+	location: newOptions.location
+	},deleteDB(newOptions.name,newOptions.location),deleteDB(newOptions.name,newOptions.location));
+};
 
 
 }else{
