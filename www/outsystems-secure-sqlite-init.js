@@ -48,8 +48,6 @@ function removeKeys(successCallback, errorCallback) {
 	initFn();
 }
 
-removeKeys(function () { console.log('Database OK')}, function (error) { console.log('Error ' + error); });
-
 // Set the `isSQLCipherPlugin` feature flag to help ensure the right plugin was loaded
 window.sqlitePlugin.sqliteFeatures["isSQLCipherPlugin"] = false;
 	
@@ -86,20 +84,20 @@ window.sqlitePlugin.deleteDatabase = function(options, successCallback, errorCal
 var originalopenDatabase = window.sqlitePlugin.openDatabase;
 window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallback) {
     var newOptions = {};
-            for (var prop in options) {
-                if (options.hasOwnProperty(prop)) {
-                    newOptions[prop] = options[prop];
-                }
-            }
-            
-            // Ensure `location` is set (it is mandatory now)
-            if (newOptions.location === undefined) {
-                newOptions.location = "default";
-            }
+    for (var prop in options) {
+	if (options.hasOwnProperty(prop)) {
+	    newOptions[prop] = options[prop];
+	}
+    }
 
-            // Validate the options and call the original openDatabase
-            //validateDbOptions(newOptions);
-            return originalopenDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location} /* newOptions*/, successCallback, errorCallback);
+    // Ensure `location` is set (it is mandatory now)
+    if (newOptions.location === undefined) {
+	newOptions.location = "default";
+    }
+
+    // Validate the options and call the original openDatabase
+    //validateDbOptions(newOptions);
+    return originalopenDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location} /* newOptions*/, successCallback, errorCallback);
 };
 
 }else{
