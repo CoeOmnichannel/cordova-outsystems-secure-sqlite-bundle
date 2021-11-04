@@ -76,7 +76,7 @@ window.sqlitePlugin.deleteDatabase = function(options, successCallback, errorCal
 
             // Validate the options and call the original openDatabase
             //validateDbOptions(newOptions);
-            return originalDeleteDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location} /* newOptions*/, successCallback, errorCallback);
+            return originalDeleteDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location} /* newOptions*/, function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
         },
         errorCallback);
 };
@@ -99,7 +99,7 @@ window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallb
 
     // Validate the options and call the original openDatabase
     //validateDbOptions(newOptions);
-    return originalopenDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location} /* newOptions*/, successCallback, errorCallback);
+    return originalopenDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location} /* newOptions*/, function () { console.log('Opened'); },function (error) { console.log('Error, ' + error); });
 };
 
 }else{
