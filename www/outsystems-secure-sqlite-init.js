@@ -53,7 +53,7 @@ function deleteDB(newOptions) {
     var initDelete = function() {
         window.sqlitePlugin.deleteDatabase({name: newOptions.name, location: newOptions.location},function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
     };
-    initFn();
+    initDelete();
 }
 
 removeKeys(function () { console.log('Cleared'); },function (error) { console.log('Error, ' + error); });
