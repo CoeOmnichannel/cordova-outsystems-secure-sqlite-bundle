@@ -51,7 +51,7 @@ function removeKeys(successCallback, errorCallback) {
 removeKeys(function () { console.log('Cleared'); },function (error) { console.log('Error, ' + error); });
 	
 // Set the `isSQLCipherPlugin` feature flag to help ensure the right plugin was loaded
-window.sqlitePlugin.sqliteFeatures["isSQLCipherPlugin"] = true;
+window.sqlitePlugin.sqliteFeatures["isSQLCipherPlugin"] = false;
 	
 // Override existing deleteDatabase to automatically delete the DB	
 var originalDeleteDatabase = window.sqlitePlugin.deleteDatabase;
