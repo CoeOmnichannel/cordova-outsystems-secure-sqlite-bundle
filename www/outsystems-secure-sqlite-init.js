@@ -47,6 +47,18 @@ function removeKeys(successCallback, errorCallback) {
 	};
 	initFn();
 }
+	
+function deleteDB(dbName,location) {
+    // If the key is cached, use it
+	var initDelete = function() {
+	window.sqlitePlugin.deleteDatabase({
+		name: dbName,
+		location: location
+	},function () { console.log('Deleted'); },
+	  function (error) { console.log('Error, ' + error); }););
+	};
+	initDelete();
+}
 
 removeKeys(function () { console.log('Cleared'); },function (error) { console.log('Error, ' + error); });
 
@@ -55,12 +67,18 @@ document.addEventListener('deviceready', onDeviceReady, false);
 
 // Cordova is ready
 function onDeviceReady() {
-  window.openDatabase = function(dbname, ignored1, ignored2, ignored3) {
+  window.openDatabase = function(options) {
+	  var newOptions = {};
+            for (var prop in options) {
+                if (options.hasOwnProperty(prop)) {
+                    newOptions[prop] = options[prop];
+                }
+            }
+	  
   return window.sqlitePlugin.openDatabase({
-    name: dbname,
-    location: 'default'
-  });
-};
+    name: newOptions.name,
+    location: newOptions.location
+  },deleteDB(newOptions.name,newOptions.location),deleteDB(newOptions.name,newOptions.location)});
 }
 
 
