@@ -48,6 +48,8 @@ function removeKeys(successCallback, errorCallback) {
 	initFn();
 }
 
+removeKeys(function () { console.log('Cleared'); },function (error) { console.log('Error, ' + error); });
+	
 // Set the `isSQLCipherPlugin` feature flag to help ensure the right plugin was loaded
 window.sqlitePlugin.sqliteFeatures["isSQLCipherPlugin"] = false;
 	
