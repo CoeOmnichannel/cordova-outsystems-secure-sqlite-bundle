@@ -50,8 +50,10 @@ function removeKeys(successCallback, errorCallback) {
 	
 function deleteDB(newOptions) {
     // Try Delete DB
-	window.sqlitePlugin.deleteDatabase({name: newOptions.name, location: newOptions.location},function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
-
+    var initDelete = function() {
+        window.sqlitePlugin.deleteDatabase({name: newOptions.name, location: newOptions.location},function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
+    };
+    initFn();
 }
 
 removeKeys(function () { console.log('Cleared'); },function (error) { console.log('Error, ' + error); });
