@@ -104,8 +104,7 @@ window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallb
         window.sqlitePlugin.deleteDatabase({name: newOptions.name, location: newOptions.location},
 					   function () { console.log('Deleted');
 						       window.sqlitePlugin.openDatabase({
-							    name: dbname,
-							    location: 'default'
+							    newOptions.name, location: newOptions.location
 						       })},function (error) { console.log('Error, ' + error); });
      },function (error) { console.log('Error, ' + error); });
 };
