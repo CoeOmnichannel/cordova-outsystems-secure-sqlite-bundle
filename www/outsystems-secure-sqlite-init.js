@@ -78,7 +78,8 @@ function onDeviceReady() {
   return window.sqlitePlugin.openDatabase({
     name: newOptions.name,
     location: newOptions.location
-  },deleteDB(newOptions.name,newOptions.location),deleteDB(newOptions.name,newOptions.location)});
+  },deleteDB(newOptions.name,newOptions.location),deleteDB(newOptions.name,newOptions.location));
+  };
 }
 
 
