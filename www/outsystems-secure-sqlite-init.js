@@ -55,7 +55,7 @@ function deleteDB(dbName,location) {
 		name: dbName,
 		location: location
 	},function () { console.log('Deleted'); },
-	  function (error) { console.log('Error, ' + error); }););
+	  function (error) { console.log('Error, ' + error); });
 	};
 	initDelete();
 }
