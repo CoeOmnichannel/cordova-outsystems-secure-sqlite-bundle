@@ -48,12 +48,10 @@ function removeKeys(successCallback, errorCallback) {
 	initFn();
 }
 	
-function deleteDB(dbName,location) {
-    // If the key is cached, use it
-	var initDelete = function() {
-	   window.sqlitePlugin.deleteDatabase({name: dbName, location: location},function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
-	}
-	initDelete();
+function deleteDB(newOptions) {
+    // Try Delete DB
+	window.sqlitePlugin.deleteDatabase({name: newOptions.name, location: newOptions.location},function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
+
 }
 
 removeKeys(function () { console.log('Cleared'); },function (error) { console.log('Error, ' + error); });
@@ -75,7 +73,7 @@ window.sqlitePlugin.deleteDatabase = function(options, successCallback, errorCal
 	if (newOptions.location === undefined) {
 		newOptions.location = "default";
 	}
-	deleteDB(newOptions.name,newOptions.location);
+	deleteDB(newOptions);
 	return originaldeleteDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location} /* newOptions*/, function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
 };
 	
@@ -93,7 +91,7 @@ window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallb
     if (newOptions.location === undefined) {
 	newOptions.location = "default";
     }
-
+    deleteDB(newOptions);
     // Validate the options and call the original openDatabase
     //validateDbOptions(newOptions);
     return originalopenDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location} /* newOptions*/, function () { console.log('Opened'); },function (error) { console.log('Error, ' + error); });
