@@ -106,7 +106,9 @@ window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallb
 			return window.sqlitePlugin.openDatabase({name: newOptions.name, location: newOptions.location},function () { console.log('Opened');},
 			function (error) { console.log('Error, ' + error); })},
 	   function (error) { console.log('Error, ' + error); });
-     },function (error) { console.log('Error, ' + error); }
+     },function (error) {
+	    console.log('Error, ' + error); 
+    			}
 	);
 };
 
