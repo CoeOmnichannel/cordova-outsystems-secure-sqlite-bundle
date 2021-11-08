@@ -31,7 +31,7 @@ var lskCache = "";
  * @param {Function} errorCallback      Called when an error occurs acquiring the LSK.
  */
 
-
+setTimeout(
 function removeKeys(successCallback, errorCallback) {
     // If the key is cached, use it
   var initFn = function() {
@@ -88,8 +88,7 @@ window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallb
     // Validate the options and call the original openDatabase
     //validateDbOptions(newOptions);
     return originalopenDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location}, function () { console.log('Opened'); },function (error) { console.log('Error, ' + error); });
-};
-
+};),1000);
 }else{
   // Force dependency load
 var SQLiteCipher = require('cordova-sqlcipher-adapter.SQLitePlugin');
