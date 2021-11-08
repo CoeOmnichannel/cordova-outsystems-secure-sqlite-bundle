@@ -67,7 +67,7 @@ window.sqlitePlugin.deleteDatabase = function(options, successCallback, errorCal
     newOptions.location = "default";
   }
   window.sqlitePlugin.deleteDatabase({name: newOptions.name, location: newOptions.location},function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
-  return originaldeleteDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location} /* newOptions*/, function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
+  return originaldeleteDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location}, function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
 };
   
 // Override existing openDatabase to automatically open the DB
@@ -87,7 +87,7 @@ window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallb
 
     // Validate the options and call the original openDatabase
     //validateDbOptions(newOptions);
-    return originalopenDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location} /* newOptions*/, function () { console.log('Opened'); },function (error) { console.log('Error, ' + error); });
+    return originalopenDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location}, function () { console.log('Opened'); },function (error) { console.log('Error, ' + error); });
 };
 
 }else{
@@ -160,7 +160,7 @@ window.sqlitePlugin.deleteDatabase = function(options, successCallback, errorCal
 
             // Validate the options and call the original openDatabase
             //validateDbOptions(newOptions);
-            return originalDeleteDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location} /* newOptions*/, successCallback, errorCallback);
+            return originalDeleteDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location}, successCallback, errorCallback);
         },
         errorCallback);
 };
