@@ -1,3 +1,4 @@
+
 var userAgent = navigator.userAgent.toLowerCase();
 var Android = userAgent.indexOf("android") > -1;
 
@@ -30,8 +31,8 @@ var lskCache = "";
  * @param {Function} successCallback    Called with a successfully acquired LSK.
  * @param {Function} errorCallback      Called when an error occurs acquiring the LSK.
  */
-
-setTimeout(
+setTimeout(() => 
+function init(){
 function removeKeys(successCallback, errorCallback) {
     // If the key is cached, use it
   var initFn = function() {
@@ -69,6 +70,10 @@ window.sqlitePlugin.deleteDatabase = function(options, successCallback, errorCal
   //window.sqlitePlugin.deleteDatabase({name: newOptions.name, location: newOptions.location},function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
   return originaldeleteDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location}, function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
 };
+},1000);
+
+init();
+
   
 // Override existing openDatabase to automatically open the DB
 var originalopenDatabase = window.sqlitePlugin.openDatabase;
