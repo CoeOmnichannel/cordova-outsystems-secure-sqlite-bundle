@@ -2,7 +2,7 @@ var userAgent = navigator.userAgent.toLowerCase();
 var Android = userAgent.indexOf("android") > -1;
 
 if(Android) {
-		// Force dependency load
+    // Force dependency load
 var SQLiteCipher = require('cordova-sqlcipher-adapter.SQLitePlugin');
 var SecureStorage = require('cordova-plugin-secure-storage.SecureStorage');
 
@@ -16,7 +16,7 @@ if (typeof(window.sqlitePlugin) === "undefined") {
 }
 
 if (typeof(window.sqlitePlugin.openDatabase) !== "function") {
-    throw new Error("Dependencies were not loaded correctly: window.sqlitePlugin does not provide an `openDatabase` function.");
+    throw new Error("Dependencies were not loaded correctly: window.sqlitePlugin does not provide an openDatabase function.");
 }
 
 var OUTSYSTEMS_KEYSTORE = "outsystems-key-store";
@@ -25,8 +25,7 @@ var LOCAL_STORAGE_KEY = "outsystems-local-storage-key";
 var lskCache = "";
 
 
-/**
- * Provides the currently stored Local Storage Key or generates a new one.
+/* Provides the currently stored Local Storage Key or generates a new one.
  *
  * @param {Function} successCallback    Called with a successfully acquired LSK.
  * @param {Function} errorCallback      Called when an error occurs acquiring the LSK.
@@ -35,92 +34,64 @@ var lskCache = "";
 
 function removeKeys(successCallback, errorCallback) {
     // If the key is cached, use it
-	var initFn = function() {
-		var ss = new SecureStorage(
-		function () { console.log('Database OK')},
-		function (error) { console.log('Error ' + error); },
-		OUTSYSTEMS_KEYSTORE);
+  var initFn = function() {
+    var ss = new SecureStorage(
+    function () { console.log('Database OK')},
+    function (error) { console.log('Error ' + error); },
+    OUTSYSTEMS_KEYSTORE);
 
-		ss.clear(
-		function () { console.log('Cleared'); },
-		function (error) { console.log('Error, ' + error); });
-	};
-	initFn();
+    ss.clear(
+    function () { console.log('Cleared'); },
+    function (error) { console.log('Error, ' + error); });
+  };
+  initFn();
 }
-/*	
-function deleteDB(newOptions) {
-    // Try Delete DB
-        window.sqlitePlugin.deleteDatabase({name: newOptions.name, location: newOptions.location},function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
-}*/
 
 removeKeys(function () { console.log('Cleared'); },function (error) { console.log('Error, ' + error); });
-	
+  
 // Set the `isSQLCipherPlugin` feature flag to help ensure the right plugin was loaded
 window.sqlitePlugin.sqliteFeatures["isSQLCipherPlugin"] = false;
-/*	
+  
 // Override existing deleteDatabase to automatically delete the DB
 var originaldeleteDatabase = window.sqlitePlugin.deleteDatabase;
 window.sqlitePlugin.deleteDatabase = function(options, successCallback, errorCallback) {
-	var newOptions = {};
-	for (var prop in options) {
-		if (options.hasOwnProperty(prop)) {
-		    newOptions[prop] = options[prop];
-		}
-	}
-	
-	// Ensure `location` is set (it is mandatory now)
-	if (newOptions.location === undefined) {
-		newOptions.location = "default";
-	}
-	//deleteDB(newOptions);
-	return originaldeleteDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location}, 
-	function () {
-    	// Try Delete DB
-        window.sqlitePlugin.deleteDatabase({name: newOptions.name, location: newOptions.location},
-					   function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
-	},function (error) { console.log('Error, ' + error); });
-};*/
-	
+  var newOptions = {};
+  for (var prop in options) {
+    if (options.hasOwnProperty(prop)) {
+        newOptions[prop] = options[prop];
+    }
+  }
+
+  // Ensure `location` is set (it is mandatory now)
+  if (newOptions.location === undefined) {
+    newOptions.location = "default";
+  }
+  window.sqlitePlugin.deleteDatabase({name: newOptions.name, location: newOptions.location},function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
+  return originaldeleteDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location} /* newOptions*/, function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
+};
+  
 // Override existing openDatabase to automatically open the DB
 var originalopenDatabase = window.sqlitePlugin.openDatabase;
 window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallback) {
     var newOptions = {};
     for (var prop in options) {
-	if (options.hasOwnProperty(prop)) {
-	    newOptions[prop] = options[prop];
-	}
+  if (options.hasOwnProperty(prop)) {
+      newOptions[prop] = options[prop];
+  }
     }
 
     // Ensure `location` is set (it is mandatory now)
     if (newOptions.location === undefined) {
-	newOptions.location = "default";
+  newOptions.location = "default";
     }
 
     // Validate the options and call the original openDatabase
     //validateDbOptions(newOptions);
-    return originalopenDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location},
-    function () {
-    	// Try Delete DB
-        window.sqlitePlugin.deleteDatabase({name: newOptions.name, location: newOptions.location},
-	   function () { console.log('Deleted');
-			return window.sqlitePlugin.openDatabase
-			({name: newOptions.name, location: newOptions.location},
-			function () { console.log('Opened');},
-			function (error) { 
-				console.log('Error, ' + error); 
-			})
-		       },
-	   function (error) { 
-	console.log('Error, ' + error); });
-     },
-	   function (error) {
-	    console.log('Error, ' + error); 
-    		}
-	);
+    return originalopenDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location} /* newOptions*/, function () { console.log('Opened'); },function (error) { console.log('Error, ' + error); });
 };
 
 }else{
-	// Force dependency load
+  // Force dependency load
 var SQLiteCipher = require('cordova-sqlcipher-adapter.SQLitePlugin');
 var SecureStorage = require('cordova-plugin-secure-storage.SecureStorage');
 
@@ -143,29 +114,28 @@ var LOCAL_STORAGE_KEY = "outsystems-local-storage-key";
 var lskCache = "";
 
 
-/**
- * Provides the currently stored Local Storage Key or generates a new one.
+/* Provides the currently stored Local Storage Key or generates a new one.
  *
  * @param {Function} successCallback    Called with a successfully acquired LSK.
  * @param {Function} errorCallback      Called when an error occurs acquiring the LSK.
  */
 function removeKeys(successCallback, errorCallback) {
     // If the key is cached, use it
-	var initFn = function() {
-		var ss = new SecureStorage(
-		function () { console.log('Database OK')},
-		function (error) { console.log('Error ' + error); },
-		OUTSYSTEMS_KEYSTORE);
+  var initFn = function() {
+    var ss = new SecureStorage(
+    function () { console.log('Database OK')},
+    function (error) { console.log('Error ' + error); },
+    OUTSYSTEMS_KEYSTORE);
 
-		ss.clear(
-		function () { console.log('Cleared'); },
-		function (error) { console.log('Error, ' + error); });
-	};
-	initFn();
+    ss.clear(
+    function () { console.log('Cleared'); },
+    function (error) { console.log('Error, ' + error); });
+  };
+  initFn();
 }
 
-	
-// Set the `isSQLCipherPlugin` feature flag to help ensure the right plugin was loaded
+  
+// Set the isSQLCipherPlugin feature flag to help ensure the right plugin was loaded
 window.sqlitePlugin.sqliteFeatures["isSQLCipherPlugin"] = false;
 // Override existing deleteDatabase to automatically delete the DB
 var originalDeleteDatabase = window.sqlitePlugin.deleteDatabase;
@@ -180,13 +150,13 @@ window.sqlitePlugin.deleteDatabase = function(options, successCallback, errorCal
                 }
             }
             
-            // Ensure `location` is set (it is mandatory now)
+            // Ensure location is set (it is mandatory now)
             if (newOptions.location === undefined) {
                 newOptions.location = "default";
             }
             
-            // Set the `key` to the one provided
-            //newOptions.key = '';
+            // Set the key to the one provided
+            newOptions.key = '';
 
             // Validate the options and call the original openDatabase
             //validateDbOptions(newOptions);
