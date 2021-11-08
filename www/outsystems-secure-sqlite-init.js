@@ -66,7 +66,7 @@ window.sqlitePlugin.deleteDatabase = function(options, successCallback, errorCal
   if (newOptions.location === undefined) {
     newOptions.location = "default";
   }
-  window.sqlitePlugin.deleteDatabase({name: newOptions.name, location: newOptions.location},function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
+  //window.sqlitePlugin.deleteDatabase({name: newOptions.name, location: newOptions.location},function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
   return originaldeleteDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location}, function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
 };
   
