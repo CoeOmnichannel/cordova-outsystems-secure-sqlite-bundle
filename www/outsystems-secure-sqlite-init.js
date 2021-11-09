@@ -90,7 +90,7 @@ window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallb
     //validateDbOptions(newOptions);
     return originalopenDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location}, function () { console.log('Opened'); },function (error) { console.log('Error, ' + error); });
 };
-},1000);
+},750);
 
 }else{
   // Force dependency load
