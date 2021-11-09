@@ -30,7 +30,7 @@ var lskCache = "";
  * @param {Function} successCallback    Called with a successfully acquired LSK.
  * @param {Function} errorCallback      Called when an error occurs acquiring the LSK.
  */
-setTimeout( 
+
 function init(){
 function removeKeys(successCallback, errorCallback) {
     // If the key is cached, use it
@@ -90,7 +90,7 @@ window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallb
     //validateDbOptions(newOptions);
     return originalopenDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location}, function () { console.log('Opened'); },function (error) { console.log('Error, ' + error); });
 };
-},250);
+};
 
 }else{
   // Force dependency load
