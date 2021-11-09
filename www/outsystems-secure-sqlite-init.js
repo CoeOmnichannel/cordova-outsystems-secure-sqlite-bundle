@@ -71,8 +71,6 @@ window.sqlitePlugin.deleteDatabase = function(options, successCallback, errorCal
 };
 },1000);
 
-init();
-
   
 // Override existing openDatabase to automatically open the DB
 var originalopenDatabase = window.sqlitePlugin.openDatabase;
