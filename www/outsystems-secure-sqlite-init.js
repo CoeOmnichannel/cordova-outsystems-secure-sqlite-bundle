@@ -2,7 +2,7 @@ var userAgent = navigator.userAgent.toLowerCase();
 var Android = userAgent.indexOf("android") > -1;
 
 if(Android) {
-// Force dependency load
+    // Force dependency load
 var SQLiteCipher = require('cordova-sqlcipher-adapter.SQLitePlugin');
 var SecureStorage = require('cordova-plugin-secure-storage.SecureStorage');
 
@@ -30,7 +30,7 @@ var lskCache = "";
  * @param {Function} successCallback    Called with a successfully acquired LSK.
  * @param {Function} errorCallback      Called when an error occurs acquiring the LSK.
  */
-
+setTimeout(() => 
 function init(){
 function removeKeys(successCallback, errorCallback) {
     // If the key is cached, use it
@@ -69,6 +69,9 @@ window.sqlitePlugin.deleteDatabase = function(options, successCallback, errorCal
   //window.sqlitePlugin.deleteDatabase({name: newOptions.name, location: newOptions.location},function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
   return originaldeleteDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location}, function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
 };
+},1000);
+
+init();
 
   
 // Override existing openDatabase to automatically open the DB
@@ -89,9 +92,7 @@ window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallb
     // Validate the options and call the original openDatabase
     //validateDbOptions(newOptions);
     return originalopenDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location}, function () { console.log('Opened'); },function (error) { console.log('Error, ' + error); });
-};
-};
-
+};,1000);
 }else{
   // Force dependency load
 var SQLiteCipher = require('cordova-sqlcipher-adapter.SQLitePlugin');
