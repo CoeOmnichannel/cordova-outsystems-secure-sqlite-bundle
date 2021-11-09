@@ -30,8 +30,7 @@ var lskCache = "";
  * @param {Function} successCallback    Called with a successfully acquired LSK.
  * @param {Function} errorCallback      Called when an error occurs acquiring the LSK.
  */
-setTimeout(() => 
-function init(){
+
 function removeKeys(successCallback, errorCallback) {
     // If the key is cached, use it
   var initFn = function() {
@@ -66,12 +65,12 @@ window.sqlitePlugin.deleteDatabase = function(options, successCallback, errorCal
   if (newOptions.location === undefined) {
     newOptions.location = "default";
   }
-  //window.sqlitePlugin.deleteDatabase({name: newOptions.name, location: newOptions.location},function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
+  window.sqlitePlugin.deleteDatabase({name: newOptions.name, location: newOptions.location},function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
   return originaldeleteDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location}, function () { console.log('Deleted'); },function (error) { console.log('Error, ' + error); });
 };
-},1000);
+}
 
-  
+ /* 
 // Override existing openDatabase to automatically open the DB
 var originalopenDatabase = window.sqlitePlugin.openDatabase;
 window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallback) {
@@ -90,7 +89,7 @@ window.sqlitePlugin.openDatabase = function(options, successCallback, errorCallb
     // Validate the options and call the original openDatabase
     //validateDbOptions(newOptions);
     return originalopenDatabase.call(window.sqlitePlugin,{name: newOptions.name, location: newOptions.location}, function () { console.log('Opened'); },function (error) { console.log('Error, ' + error); });
-};
+};*/
     
 }else{
   // Force dependency load
